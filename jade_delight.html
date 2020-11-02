@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Jade Delight</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <style>
+      .hide {
+        display: none;
+      }
+
+      .button1 {
+        height: 38px;
+        background: #82b3e0;
+        border: none;
+        padding-left: 20px;
+        padding-right: 20px;
+        color: #ffffff;
+        font-size: 15px;
+        float: none;
+        border-radius: 5px;
+        font-weight: bold;
+        letter-spacing: 1px;
+      }
+
+      .button1:hover {
+        background-color: #fcb867;
+      }
+      label.error {
+        color: #ff0000;
+        padding-left: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script language="javascript">
+      function MenuItem(name, cost) {
+        this.name = name;
+        this.cost = cost;
+      }
+
+      menuItems = new Array(
+        new MenuItem("Chicken Chop Suey", 4.5),
+        new MenuItem("Sweet and Sour Pork", 6.25),
+        new MenuItem("Shrimp Lo Mein", 5.25),
+        new MenuItem("Moo Shi Chicken", 6.5),
+        new MenuItem("Fried Rice", 2.35)
+      );
+
+      function makeSelect(name, minRange, maxRange) {
+        var t = "";
+        t = "<select name='" + name + "' size='1'>";
+        for (j = minRange; j <= maxRange; j++)
+          t += "<option>" + j + "</option>";
+        t += "</select>";
+        return t;
+      }
+    </script>
+
+    <h1>Jade Delight</h1>
+    <form>
+      <p>First Name: <input type="text" name="fname" id="fname" /></p>
+      <p>Last Name*: <input type="text" name="lname" id="lname" /></p>
+      <p class="hide">
+        Street: <input type="text" class="hide" name="street" id="street" />
+      </p>
+      <p class="hide">
+        City: <input type="text" class="hide" name="city" id="city" />
+      </p>
+      <p>Phone*: <input type="text" name="phone" id="phone" /></p>
+      <p>
+        <input
+          type="radio"
+          name="p_or_d"
+          value="pickup"
+          checked="checked"
+          onclick="handlePickUp()"
+          id="pickup"
+        />Pickup
+        <input
+          type="radio"
+          name="p_or_d"
+          value="delivery"
+          onclick="handleDelivery()"
+          id="delivery"
+        />
+        Delivery
+      </p>
+      <table border="0" cellpadding="3">
+        <tr>
+          <th>Select Item</th>
+          <th>Item Name</th>
+          <th>Cost Each</th>
+          <th>Total Cost</th>
+        </tr>
+        <script language="javascript">
+          var s = "";
+          for (i = 0; i < menuItems.length; i++) {
+            s += "<tr><td>";
+            s += makeSelect("quan" + i, 0, 10);
+            s += "</td><td>" + menuItems[i].name + "</td>";
+            s += "<td> $ " + menuItems[i].cost.toFixed(2) + "</td>";
+            s += "<td> $ <input type='text' name='cost'/></td></tr>";
+          }
+          document.writeln(s);
+        </script>
+      </table>
+      <p>Subtotal: $<input type="text" name="subtotal" id="subtotal" /></p>
+      <p>Mass tax 6.25%: $ <input type="text" name="tax" id="tax" /></p>
+      <p>Total: $ <input type="text" name="total" id="total" /></p>
+      <script async="async" language="javascript">
+        var selectTags = document.getElementsByTagName("select");
+        var mySelectOne = selectTags[0];
+        var mySelectTwo = selectTags[1];
+        var mySelectThree = selectTags[2];
+        var mySelectFour = selectTags[3];
+        var mySelectFive = selectTags[4];
+        var costTags = document.getElementsByName("cost");
+        costTags[0].value = 0.0;
+        costTags[1].value = 0.0;
+        costTags[2].value = 0.0;
+        costTags[3].value = 0.0;
+        costTags[4].value = 0.0;
+        mySelectOne.onchange = function () {
+          var rawCost =
+            parseInt(mySelectOne.value) * menuItems[0].cost.toFixed(2);
+          costTags[0].value = rawCost.toFixed(2);
+          calculate();
+        };
+        mySelectTwo.onchange = function () {
+          var rawCost =
+            parseInt(mySelectTwo.value) * menuItems[1].cost.toFixed(2);
+          costTags[1].value = rawCost.toFixed(2);
+          calculate();
+        };
+        mySelectThree.onchange = function () {
+          var rawCost =
+            parseInt(mySelectThree.value) * menuItems[2].cost.toFixed(2);
+          costTags[2].value = rawCost.toFixed(2);
+          calculate();
+        };
+        mySelectFour.onchange = function () {
+          var rawCost =
+            parseInt(mySelectFour.value) * menuItems[3].cost.toFixed(2);
+          costTags[3].value = rawCost.toFixed(2);
+          calculate();
+        };
+        mySelectFive.onchange = function () {
+          var rawCost =
+            parseInt(mySelectFive.value) * menuItems[4].cost.toFixed(2);
+          costTags[4].value = rawCost.toFixed(2);
+          calculate();
+        };
+        function calculate() {
+          var subtotalElem = document.getElementById("subtotal");
+          var salesTaxElem = document.getElementById("tax");
+          var totalElem = document.getElementById("total");
+          salesTaxElem.value = 0.0;
+          subtotalElem.value = 0.0;
+          totalElem.value = 0.0;
+          var valueOne = parseFloat(costTags[0].value);
+          var valueTwo = parseFloat(costTags[1].value);
+          var valueThree = parseFloat(costTags[2].value);
+          var valueFour = parseFloat(costTags[3].value);
+          var valueFive = parseFloat(costTags[4].value);
+          var subtotal =
+            valueOne + valueTwo + valueThree + valueFour + valueFive;
+          var salesTax = subtotal * 0.0625;
+          var total = subtotal + salesTax;
+          subtotalElem.value = subtotal.toFixed(2);
+          salesTaxElem.value = salesTax.toFixed(2);
+          totalElem.value = total.toFixed(2);
+        }
+        function handleDelivery() {
+          var street = document.getElementById("street");
+          var city = document.getElementById("city");
+          street.parentElement.classList.remove("hide");
+          street.classList.remove("hide");
+          city.parentElement.classList.remove("hide");
+          city.classList.remove("hide");
+        }
+        function handlePickUp() {
+          var street = document.getElementById("street");
+          var city = document.getElementById("city");
+          street.parentElement.classList.add("hide");
+          street.classList.add("hide");
+          city.parentElement.classList.add("hide");
+          city.classList.add("hide");
+        }
+      </script>
+      <input type="submit" value="Submit Order" class="button1" id="button1" />
+      <script language="javascript">
+        $(document).ready(
+          function () {
+            $("#button1").click(
+              function () {
+                if (document.getElementById("lname").value == "") {
+                  alert("Last name is required to complete order");
+                  $("#lname").select();
+                  $("#lname").focusin();
+                  return false;
+                } else if (document.getElementById("phone").value == "") {
+                  alert("Phone number is required to complete order");
+                  $("#phone").select();
+                  $("#phone").focusin();
+                  return false;
+                } else if (
+                  !$("#street").hasClass("hide") &&
+                  document.getElementById("street").value == ""
+                ) {
+                  alert("Street is required to complete order");
+                  $("#street").select();
+                  $("#street").focusin();
+                  return false;
+                } else if (
+                  !$("#city").hasClass("hide") &&
+                  document.getElementById("city").value == ""
+                ) {
+                  alert("City is required to complete order");
+                  $("#city").select();
+                  $("#city").focusin();
+                  return false;
+                } else {
+                  var today = new Date();
+                  var h = today.getHours();
+                  var m = today.getMinutes();
+                  var deliveryTime = 0;
+                  if (document.getElementById("pickup").checked == true) {
+                    var totalTime = h * 60 + m + 15;
+                    var mins = totalTime / 60;
+                    var newHour = parseInt(mins);
+                    var newMins = mins * 60;
+                    if (newHour == 0) {
+                      newHour = 12;
+                    }
+                    if (newMins % 60 == 1) {
+                      newMins = 0;
+                    } else if (newMins >= 60) {
+                      newMins = newMins % 60;
+                    }
+                    deliveryTime = newHour + ":" + newMins;
+                  }
+                  if (document.getElementById("delivery").checked == true) {
+                    var totalTime = h * 60 + m + 30;
+                    var mins = totalTime / 60;
+                    var newHour = parseInt(mins);
+                    var newMins = mins * 60;
+                    if (newHour == 0) {
+                      newHour = 12;
+                    }
+                    if (newMins % 60 == 1) {
+                      newMins = 0;
+                    } else if (newMins >= 60) {
+                      newMins = newMins % 60;
+                    }
+                    deliveryTime = newHour + ":" + newMins;
+                  }
+                  alert(
+                    "Your form has been submitted. \n Delivery time " +
+                      deliveryTime +
+                      "\n Total amount of order: " +
+                      document.getElementById("total").value +
+                      " "
+                  );
+                  $("#fname").val("");
+                  $("#lname").val("");
+                  $("#phone").val("");
+                  $("#city").val("");
+                  $("#street").val("");
+                }
+              } //close button1 click function
+            ); //close button1 click function
+          } //closing ready event handler
+        ); //end ready event handler
+      </script>
+    </form>
+  </body>
+</html>
